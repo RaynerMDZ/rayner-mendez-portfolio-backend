@@ -31,6 +31,8 @@ model User {
     skills Skill[]
     services Service[]
     posts Post[]
+    educations Education[]
+    employments Employment[]
 }
 
 model Authentication {
@@ -55,6 +57,7 @@ model Post {
     created_date DateTime @default(now())
     modified_date DateTime? @updatedAt
     pictures Picture[]
+    skills Skill[]
 
     user_id String
     user User @relation(fields: [user_id], references: [id])
@@ -87,6 +90,9 @@ model Skill {
 
     user_id String
     user User @relation(fields: [user_id], references: [id])
+
+    skill_id String?
+    skill Skill? @relation(fields: [skill_id], references: [id])
 }
 
 model Service {
@@ -95,6 +101,40 @@ model Service {
     name String @db.VarChar(200)
     description String @db.VarChar(200)
     is_active Boolean
+    created_date DateTime @default(now())
+    modified_date DateTime? @updatedAt
+
+    user_id String
+    user User @relation(fields: [user_id], references: [id])
+}
+
+model Education {
+    id String @id @default(uuid()) @unique
+    slug String? @db.VarChar(200)
+    institution String @db.VarChar(200)
+    field String? @db.VarChar(200)
+    degree String? @db.VarChar(200)
+    location String? @db.VarChar(200)
+    description String @db.VarChar(1000)
+    url String?
+    start_date DateTime
+    end_date DateTime
+    created_date DateTime @default(now())
+    modified_date DateTime? @updatedAt
+
+    user_id String
+    user User @relation(fields: [user_id], references: [id])
+}
+
+model Employment {
+    id String @id @default(uuid()) @unique
+    slug String? @db.VarChar(200)
+    company String @db.VarChar(200)
+    job_title String @db.VarChar(200)
+    location String? @db.VarChar(200)
+    description String @db.VarChar(500)
+    start_date DateTime
+    end_date DateTime
     created_date DateTime @default(now())
     modified_date DateTime? @updatedAt
 
