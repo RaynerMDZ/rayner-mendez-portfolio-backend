@@ -6,9 +6,10 @@ import { LoginDto } from './auth/dto/login.dto';
 import { SignupDto } from './auth/dto/signup.dto';
 import { PostModule } from './post/post.module';
 import { PictureModule } from './picture/picture.module';
-import { AboutModule } from './about/about.module';
 import { SkillModule } from './skill/skill.module';
-import { JwtModule } from '@nestjs/jwt';
+import { AdminModule } from './admin/admin.module';
+import { UserModule } from './user/user.module';
+import { ServiceModule } from './service/service.module';
 
 @Module({
   imports: [
@@ -19,8 +20,10 @@ import { JwtModule } from '@nestjs/jwt';
     SignupDto,
     PostModule,
     PictureModule,
-    AboutModule,
     SkillModule,
+    AdminModule,
+    UserModule,
+    ServiceModule,
   ],
 })
 export class AppModule {}

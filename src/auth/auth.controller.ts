@@ -3,7 +3,7 @@ import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { SignupDto } from './dto/signup.dto';
 
-@Controller('auth')
+@Controller('v1/auth')
 export class AuthController {
   constructor(private readonly service: AuthService) {}
 
@@ -12,10 +12,8 @@ export class AuthController {
     return this.service.login(dto);
   }
 
-  @Post('signup')
-  signup(@Body() dto: SignupDto) {
-    return this.service.signup(dto);
-  }
+  // @Post('signup')
+  // signup(@Body() dto: SignupDto) {
+  //   return this.service.signup(dto);
+  // }
 }
-
-// https://www.youtube.com/watch?v=GHTA143_b-s&t=5680s
