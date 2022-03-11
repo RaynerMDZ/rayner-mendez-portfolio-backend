@@ -1,26 +1,34 @@
 import { Injectable } from '@nestjs/common';
 import { CreateSkillDto } from './dto/create-skill.dto';
 import { UpdateSkillDto } from './dto/update-skill.dto';
+import { DatabaseService } from '../database/database.service';
+import { ReturnSkillDto } from './dto/return-skill.dto';
 
 @Injectable()
 export class SkillService {
-  create(createSkillDto: CreateSkillDto) {
-    return 'This action adds a new skill';
+  constructor(private readonly database: DatabaseService) {}
+
+  async create(createSkillDto: CreateSkillDto): Promise<ReturnSkillDto> {
+    // @ts-ignore
+    return await this.database.skill.create({ data: createSkillDto });
   }
 
-  findAll() {
-    return `This action returns all skill`;
+  async findAll(): Promise<ReturnSkillDto[]> {
+    return await this.database.skill.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} skill`;
+  async findOne(id: string): Promise<ReturnSkillDto> {
+    return await this.database.skill.findUnique({ where: { id: id } });
   }
 
-  update(id: number, updateSkillDto: UpdateSkillDto) {
-    return `This action updates a #${id} skill`;
+  async update(id: string, updateSkillDto: UpdateSkillDto): Promise<ReturnSkillDto> {
+    return await this.database.skill.update({
+      where: { id: id },
+      data: updateSkillDto,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} skill`;
+  async remove(id: string): Promise<ReturnSkillDto> {
+    return await this.database.skill.delete({ where: { id: id } });
   }
 }
