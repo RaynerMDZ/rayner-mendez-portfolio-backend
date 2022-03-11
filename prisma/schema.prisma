@@ -22,6 +22,7 @@ model User {
     github String? @db.VarChar(500)
     linkedin String? @db.VarChar(500)
     twitter String? @db.VarChar(500)
+    resume_url String? @db.VarChar(500)
     created_date DateTime @default(now())
     modified_date DateTime? @updatedAt
 

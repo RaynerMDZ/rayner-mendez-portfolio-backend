@@ -1,26 +1,37 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePictureDto } from './dto/create-picture.dto';
 import { UpdatePictureDto } from './dto/update-picture.dto';
+import { DatabaseService } from '../database/database.service';
+import { ReturnPictuteDto } from './dto/return-pictute.dto';
 
 @Injectable()
 export class PictureService {
-  create(createPictureDto: CreatePictureDto) {
-    return 'This action adds a new picture';
+  constructor(private readonly database: DatabaseService) {}
+
+  async create(createPictureDto: CreatePictureDto): Promise<ReturnPictuteDto> {
+    // @ts-ignore
+    return await this.database.picture.create({ data: createPictureDto });
   }
 
-  findAll() {
-    return `This action returns all picture`;
+  async findAll(): Promise<ReturnPictuteDto[]> {
+    return await this.database.picture.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} picture`;
+  async findOne(id: string): Promise<ReturnPictuteDto> {
+    return await this.database.picture.findUnique({ where: { id: id } });
   }
 
-  update(id: number, updatePictureDto: UpdatePictureDto) {
-    return `This action updates a #${id} picture`;
+  async update(
+    id: string,
+    updatePictureDto: UpdatePictureDto,
+  ): Promise<ReturnPictuteDto> {
+    return await this.database.picture.update({
+      where: { id: id },
+      data: updatePictureDto,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} picture`;
+  async remove(id: string): Promise<ReturnPictuteDto> {
+    return await this.database.picture.delete({ where: { id: id } });
   }
 }
