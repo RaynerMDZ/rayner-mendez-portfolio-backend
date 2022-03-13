@@ -22,56 +22,28 @@ export class UserService {
     private readonly skillService: SkillService,
   ) {}
 
-  async create(createUserDto: CreateUserDto): Promise<ReturnUserDto> {
-    try {
-      // @ts-ignore
-      return await this.database.user.create({ data: createUserDto });
-    } catch (err) {
-      console.log(err);
-    }
+
+  async getUser(id: string) {
+    return Promise.resolve(undefined);
   }
 
-  async findAll(): Promise<ReturnUserDto[]> {
-    try {
-      // @ts-ignore
-      return await this.database.user.findMany();
-    } catch (err) {
-      console.log(err);
-    }
+  async getPosts(userId: string, page: number, pageSize: number) {
+    return Promise.resolve(undefined);
   }
 
-  async findOne(id: string): Promise<ReturnUserDto> {
-    try {
-      // @ts-ignore
-      return await this.database.user.findUnique({ where: { id: id } });
-    } catch (err) {
-      console.log(err);
-    }
+  async getPost(userId: string, postId: string) {
+    return Promise.resolve(undefined);
   }
 
-  async update(
-    id: string,
-    updateUserDto: UpdateUserDto,
-  ): Promise<ReturnUserDto> {
-    try {
-      // @ts-ignore
-      return await this.database.user.update({
-        where: { id: id },
-        data: updateUserDto,
-      });
-    } catch (err) {
-      console.log(err);
-    }
+  async getSkills(userId: string) {
+    return Promise.resolve(undefined);
   }
 
-  async remove(id: string): Promise<ReturnUserDto> {
-    try {
-      // @ts-ignore
-      return this.database.user.delete({
-        where: { id: id },
-      });
-    } catch (err) {
-      console.log(err);
-    }
+  async getEducations(userId: string) {
+    return Promise.resolve(undefined);
+  }
+
+  async getEmployments(userId: string) {
+    return Promise.resolve(undefined);
   }
 }

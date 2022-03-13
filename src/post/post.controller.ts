@@ -7,16 +7,16 @@ export class PostController {
 
   @Get(':id')
   async getPost(@Param('id') id: string) {
-    return 'getPost working!';
+    return await this.postService.getPost(id);
   }
 
   @Get(':id/pictures')
   async getPictures(@Param('id') id: string) {
-    return 'getPictures working!';
+    return await this.postService.getPictures(id);
   }
 
   @Get(':id/skills')
   async getSkills(@Param('id') id: string) {
-    return 'getSkills working!';
+    return await this.postService.getSkills(id);
   }
 }

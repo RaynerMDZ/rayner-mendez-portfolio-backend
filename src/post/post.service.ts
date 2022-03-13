@@ -1,26 +1,35 @@
 import { Injectable } from '@nestjs/common';
-import { CreatePostDto } from './dto/create-post.dto';
-import { UpdatePostDto } from './dto/update-post.dto';
+import { DatabaseService } from '../database/database.service';
+import { PictureService } from '../picture/picture.service';
+import { SkillService } from '../skill/skill.service';
 
 @Injectable()
 export class PostService {
-  async create(createPostDto: CreatePostDto) {
-    return await 'This action adds a new post';
+  constructor(
+    private readonly database: DatabaseService,
+    private readonly pictureService: PictureService,
+    private readonly skillService: SkillService,
+  ) {}
+
+  async getPost(id: string) {
+    return await this.database.post.findUnique({ where: { id: id } });
   }
 
-  async findAll() {
-    return await`This action returns all post`;
+  async getPictures(id: string) {
+    const post = await this.database.post.findUnique({
+      where: { id: id },
+      include: { pictures: true },
+    });
+
+    return post.pictures;
   }
 
-  async findOne(id: string) {
-    return await `This action returns a #${id} post`;
-  }
+  async getSkills(id: string) {
+    const post = await this.database.post.findUnique({
+      where: { id: id },
+      include: { skills: true },
+    });
 
-  async update(id: string, updatePostDto: UpdatePostDto) {
-    return await`This action updates a #${id} post`;
-  }
-
-  async remove(id: string) {
-    return await `This action removes a #${id} post`;
+    return post.skills;
   }
 }
