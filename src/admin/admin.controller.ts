@@ -68,7 +68,7 @@ export class AdminController {
   @Post('users/user-id/posts/create-post')
   async createPost(@Param('user-id') userId: string, @Body() dto: CreatePostDto,
   ) {
-    return await this.adminService.createPost(userId, dto);
+    // return await this.adminService.createPost(userId, dto);
   }
 
   @Post('users/user-id/posts/:post-id/update-post')

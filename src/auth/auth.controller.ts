@@ -12,8 +12,11 @@ export class AuthController {
     return this.service.login(dto);
   }
 
-  // @Post('signup')
-  // signup(@Body() dto: SignupDto) {
-  //   return this.service.signup(dto);
-  // }
+  @Post('signup')
+  signup(@Body() dto: SignupDto) {
+
+    console.log(dto.email, dto.password);
+
+    return this.service.signup(dto);
+  }
 }

@@ -1,16 +1,16 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable, Logger,
+  NotFoundException
+} from "@nestjs/common";
 import { DatabaseService } from '../database/database.service';
-import { UserService } from '../user/user.service';
-import { UpdateEmploymentDto } from '../employment/dto/update-employment.dto';
-import { PostService } from "../post/post.service";
+import { UpdatePictureDto } from './dto/update-picture.dto';
 
 @Injectable()
 export class PictureService {
-  constructor(
-    private readonly database: DatabaseService,
-    private readonly userService: UserService,
-    private readonly postService: PostService,
-  ) {}
+  private readonly logger: Logger;
+  constructor(private readonly database: DatabaseService) {
+    this.logger = new Logger('Picture Service');
+  }
 
   async createUserPicture(userId: string, image: Express.Multer.File) {
     // const user = await this.userService.getUser(userId);
@@ -22,10 +22,13 @@ export class PictureService {
     return '';
   }
 
-  async updateUserPicture(userId: string, pictureId: string, image: Express.Multer.File) {
+  async updateUserPicture(
+    userId: string,
+    pictureId: string,
+    image: Express.Multer.File,
+  ) {
     return '';
   }
-
 
   async getUserPicture(userId: string) {
     return await this.database.user.findUnique({
@@ -41,36 +44,44 @@ export class PictureService {
     });
   }
 
-  async findOne(userId: string, employmentId) {
-    const user = await this.userService.getUser(userId);
-    if (!user)
-      throw new NotFoundException(`User with id: ${userId} not found.`);
-
-    const employment = await this.database.employment.findUnique({ where: { id: employmentId } });
-    if (!employment)
-      throw new NotFoundException(`Employment with id: ${employmentId} not found.`);
-
-    return employment;
+  async findOne(userId: string, pictureId) {
+    // const user = await this.userService.getUser(userId);
+    // if (!user)
+    //   throw new NotFoundException(`User with id: ${userId} not found.`);
+    //
+    // const picture = await this.database.picture.findUnique({
+    //   where: { id: pictureId },
+    // });
+    // if (!picture)
+    //   throw new NotFoundException(
+    //     `Employment with id: ${pictureId} not found.`,
+    //   );
+    //
+    // return picture;
   }
 
-  async update(userId: string, employmentId: string, updateEmploymentDto: UpdateEmploymentDto) {
-    const employment = await this.findOne(userId, employmentId);
-    if (!employment)
-      throw new NotFoundException(`Employment with id: ${employmentId} not found.`);
-    // @ts-ignore
-    return await this.database.employment.update({
-      where: { id: employment.id },
-      data: updateEmploymentDto,
-    });
+  async update(userId: string, pictureId: string, dto: UpdatePictureDto) {
+    // const picture = await this.findOne(userId, pictureId);
+    // if (!picture)
+    //   throw new NotFoundException(
+    //     `Employment with id: ${pictureId} not found.`,
+    //   );
+    //
+    // return await this.database.picture.update({
+    //   where: { id: picture.id },
+    //   data: dto,
+    // });
   }
 
-  async remove(userId: string, employmentId: string) {
-    const employment = await this.findOne(userId, employmentId);
-    if (!employment)
-      throw new NotFoundException(`Employment with id: ${employmentId} not found.`);
-
-    return await this.database.employment.delete({
-      where: { id: employment.id },
-    });
+  async remove(userId: string, pictureId: string) {
+    // const picture = await this.findOne(userId, pictureId);
+    // if (!picture)
+    //   throw new NotFoundException(
+    //     `Employment with id: ${pictureId} not found.`,
+    //   );
+    //
+    // return await this.database.employment.delete({
+    //   where: { id: picture.id },
+    // });
   }
 }

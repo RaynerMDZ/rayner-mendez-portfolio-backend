@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { CreateSkillDto } from './dto/create-skill.dto';
 import { UpdateSkillDto } from './dto/update-skill.dto';
 import { DatabaseService } from '../database/database.service';
@@ -6,7 +6,10 @@ import { ReturnSkillDto } from './dto/return-skill.dto';
 
 @Injectable()
 export class SkillService {
-  constructor(private readonly database: DatabaseService) {}
+  private readonly logger: Logger;
+  constructor(private readonly database: DatabaseService) {
+    this.logger = new Logger('Skill Service');
+  }
 
   async create(createSkillDto: CreateSkillDto): Promise<ReturnSkillDto> {
     // @ts-ignore
@@ -21,7 +24,10 @@ export class SkillService {
     return await this.database.skill.findUnique({ where: { id: id } });
   }
 
-  async update(id: string, updateSkillDto: UpdateSkillDto): Promise<ReturnSkillDto> {
+  async update(
+    id: string,
+    updateSkillDto: UpdateSkillDto,
+  ): Promise<ReturnSkillDto> {
     return await this.database.skill.update({
       where: { id: id },
       data: updateSkillDto,

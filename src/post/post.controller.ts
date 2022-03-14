@@ -7,7 +7,7 @@ export class PostController {
 
   @Get(':id')
   async getPost(@Param('id') id: string) {
-    return await this.postService.getPost(id);
+    // return await this.postService.getPost(id);
   }
 
   @Get(':id/pictures')

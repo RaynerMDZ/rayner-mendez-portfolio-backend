@@ -1,10 +1,12 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('v1/users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @UseGuards(AuthGuard('jwt'))
   @Get(':id')
   async getUser(@Param('id') id: string) {
     return await this.userService.getUser(id);

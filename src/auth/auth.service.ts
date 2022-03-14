@@ -4,6 +4,7 @@ import { LoginDto } from './dto/login.dto';
 import * as argon from 'argon2';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { SignupDto } from './dto/signup.dto';
 
 @Injectable()
 export class AuthService {
@@ -21,6 +22,7 @@ export class AuthService {
         where: {
           email: email,
         },
+        include: { user: true },
       });
 
       if (!authentication) {
@@ -36,15 +38,22 @@ export class AuthService {
         throw new ForbiddenException('Incorrect Credentials');
       }
 
-      return this.signToken(authentication.user_id, authentication.email);
+      return this.signToken(authentication.id, authentication.email);
     } catch (err) {
       throw new ForbiddenException('Incorrect Credentials');
     }
   }
 
-  // async signup(dto: SignupDto) {
-  //   return { msg: 'Working' };
-  // }
+  async signup(dto: SignupDto) {
+
+    const { email, password } = dto;
+
+    const hash = await argon.hash(password);
+
+    return await this.database.authentication.create({
+      data: { email: email, password: hash },
+    });
+  }
 
   private async signToken(
     userId: string,

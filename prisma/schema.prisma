@@ -26,13 +26,15 @@ model User {
     created_date DateTime @default(now())
     modified_date DateTime? @updatedAt
 
-    authentication Authentication?
     profile_picture Picture?
     skills Skill[]
     services Service[]
     posts Post[]
     educations Education[]
     employments Employment[]
+
+    authentication_id String
+    authentication Authentication @relation(fields: [authentication_id], references: [id])
 }
 
 model Authentication {
@@ -42,8 +44,7 @@ model Authentication {
     created_date DateTime @default(now())
     modified_date DateTime? @updatedAt
 
-    user_id String
-    user User @relation(fields: [user_id], references: [id])
+    user User?
 }
 
 model Post {

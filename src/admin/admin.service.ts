@@ -73,11 +73,11 @@ export class AdminService {
     pictureId: string,
     image: Express.Multer.File,
   ) {
-    const user = await this.userService.getUser(userId);
-    if (!user) throw new NotFoundException('User not found!');
-
-    const post = await this.postService.getPost(user.id, postId);
-    if (!post) throw new NotFoundException('Post not found!');
+    // const user = await this.userService.getUser(userId);
+    // if (!user) throw new NotFoundException('User not found!');
+    //
+    // const post = await this.postService.getPost(user.id, postId);
+    // if (!post) throw new NotFoundException('Post not found!');
 
     // const picture = await this.pictureService.update(pictureId);
     // if (!picture) throw new NotFoundException('Picture not found!');

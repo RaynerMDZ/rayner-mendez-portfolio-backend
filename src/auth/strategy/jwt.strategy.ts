@@ -5,10 +5,10 @@ import { Injectable } from '@nestjs/common';
 import { DatabaseService } from '../../database/database.service';
 
 @Injectable()
-export class jwtStrategy extends PassportStrategy(Strategy, 'jwt') {
+export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   constructor(
     config: ConfigService,
-    private readonly database: DatabaseService
+    private readonly database: DatabaseService,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
