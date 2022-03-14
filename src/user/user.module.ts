@@ -8,6 +8,8 @@ import { PostService } from '../post/post.service';
 import { ServiceService } from '../service/service.service';
 import { SkillService } from '../skill/skill.service';
 import { LoggerMiddleware } from '../utils/middlewares/logger.middleware';
+import { CreateUserDto } from "./dto/create-user.dto";
+import { UpdateUserDto } from "./dto/update-user.dto";
 
 @Module({
   controllers: [UserController],
@@ -19,10 +21,10 @@ import { LoggerMiddleware } from '../utils/middlewares/logger.middleware';
     PostService,
     ServiceService,
     SkillService,
+    CreateUserDto,
+    UpdateUserDto,
   ],
 })
-export class UserModule implements NestModule {
-  configure(consumer: MiddlewareConsumer): any {
-    consumer.apply(LoggerMiddleware).forRoutes('*');
-  }
+export class UserModule {
+
 }

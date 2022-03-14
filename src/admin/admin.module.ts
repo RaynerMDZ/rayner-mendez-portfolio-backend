@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { AdminController } from './admin.controller';
-import { UserService } from '../user/user.service';
 import { EducationService } from '../education/education.service';
 import { EmploymentService } from '../employment/employment.service';
 import { PictureService } from '../picture/picture.service';
 import { PostService } from '../post/post.service';
 import { ServiceService } from '../service/service.service';
 import { SkillService } from '../skill/skill.service';
+import { UserService } from '../user/user.service';
 
 @Module({
   controllers: [AdminController],

@@ -2,22 +2,26 @@ import { IsNotEmpty, IsPhoneNumber, IsString } from 'class-validator';
 
 export class CreateUserDto {
   @IsString()
+  @IsNotEmpty()
+  id: string;
+
+  @IsString()
   slug: string;
 
   @IsString()
   @IsNotEmpty()
-  first_name: string;
+  firstName: string;
 
   @IsString()
-  middle_name: string;
+  middleName: string;
 
   @IsString()
   @IsNotEmpty()
-  last_name: string;
+  lastName: string;
 
-  @IsPhoneNumber()
+  @IsPhoneNumber('US')
   @IsNotEmpty()
-  phone_number: string;
+  phoneNumber: string;
 
   @IsString()
   location: string;
@@ -34,4 +38,7 @@ export class CreateUserDto {
 
   @IsString()
   twitter: string;
+
+  @IsString()
+  resumeUrl: string;
 }

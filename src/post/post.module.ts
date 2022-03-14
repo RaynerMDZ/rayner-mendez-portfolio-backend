@@ -7,8 +7,6 @@ import { LoggerMiddleware } from '../utils/middlewares/logger.middleware';
   controllers: [PostController],
   providers: [PostService],
 })
-export class PostModule implements NestModule {
-  configure(consumer: MiddlewareConsumer): any {
-    consumer.apply(LoggerMiddleware).forRoutes('*');
-  }
+export class PostModule {
+
 }

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
 import { AuthModule } from './auth/auth.module';
 import { DatabaseModule } from './database/database.module';
 import { ConfigModule } from '@nestjs/config';
@@ -12,14 +12,13 @@ import { UserModule } from './user/user.module';
 import { ServiceModule } from './service/service.module';
 import { EducationModule } from './education/education.module';
 import { EmploymentModule } from './employment/employment.module';
+import { LoggerMiddleware } from './utils/middlewares/logger.middleware';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     AuthModule,
     DatabaseModule,
-    LoginDto,
-    SignupDto,
     PostModule,
     PictureModule,
     SkillModule,
@@ -30,4 +29,8 @@ import { EmploymentModule } from './employment/employment.module';
     EmploymentModule,
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): any {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+}

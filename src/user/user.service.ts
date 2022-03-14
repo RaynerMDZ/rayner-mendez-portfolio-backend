@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { DatabaseService } from '../database/database.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -11,41 +11,92 @@ export class UserService {
   }
 
   async getUser(id: string) {
-    // const user = await this.database.user.findUnique({ where: { id: id } });
-    //
-    // if (!user) throw new NotFoundException(`User with id: ${id} not found.`);
-    //
-    // return user;
-    return false;
+    const user = await this.database.user.findUnique({ where: { id: id } });
+
+    if (!user) throw new NotFoundException(`User with id: ${id} not found.`);
+
+    return user;
   }
 
-  async getPosts(userId: string, page: number, pageSize: number) {
-    // return await this.postService.getPosts(userId, page, pageSize);
-    return false;
+  async getUserPosts(userId: string, page: number, pageSize: number) {
+    const user = await this.getUser(userId);
+
+    return await this.database.post.findMany({
+      where: { user_id: user.id },
+      skip: page,
+      take: pageSize,
+    });
   }
 
-  async getPost(userId: string, postId: string) {
-    // return await this.postService.getPost(userId, postId);
-    return false;
+  async getUserPost(userId: string, postId: string) {
+    const user = await this.getUser(userId);
+    return await this.database.user.findUnique({
+      where: { id: user.id },
+      select: { posts: { where: { id: postId } } },
+    });
   }
 
-  async getSkills(userId: string) {
-    // return await this.skillService.getSkills(userId);
-    return false;
+  async getUserSKills(userId: string) {
+    const user = await this.getUser(userId);
+    return await this.database.user.findUnique({
+      where: { id: user.id },
+      select: { skills: true },
+    });
   }
 
-  async getEducations(userId: string) {
-    // return await this.educationService.getEducations(userId);
-    return false;
+  async getUserEducation(userId: string) {
+    const user = await this.getUser(userId);
+    return await this.database.user.findUnique({
+      where: { id: user.id },
+      select: { educations: true },
+    });
   }
 
-  async getEmployments(userId: string) {
-    // return await this.employmentService.getEmployments(userId);
-    return false;
+  async getUserEmployment(userId: string) {
+    const user = await this.getUser(userId);
+    return await this.database.user.findUnique({
+      where: { id: user.id },
+      select: { employments: true },
+    });
   }
 
   async createUser(dto: CreateUserDto) {
-    return false;
+    const {
+      id,
+      slug,
+      firstName,
+      middleName,
+      lastName,
+      phoneNumber,
+      location,
+      summary,
+      github,
+      linkedin,
+      twitter,
+      resumeUrl,
+    } = dto;
+
+    try {
+      return await this.database.user.create({
+        data: {
+          id: id,
+          slug: slug,
+          first_name: firstName,
+          middle_name: middleName,
+          last_name: lastName,
+          phone_number: phoneNumber,
+          location: location,
+          summary: summary,
+          github: github,
+          linkedin: linkedin,
+          twitter: twitter,
+          resume_url: resumeUrl,
+        },
+      });
+    } catch (err) {
+      this.logger.error(`User with id: ${id} already exists.`);
+      throw new ConflictException(`User with id: ${id} already exists.`);
+    }
   }
 
   async updateUser(userId: string, dto: UpdateUserDto) {

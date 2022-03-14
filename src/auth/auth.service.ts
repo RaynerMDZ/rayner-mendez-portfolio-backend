@@ -1,4 +1,8 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  ForbiddenException,
+  Injectable, Logger
+} from "@nestjs/common";
 import { DatabaseService } from '../database/database.service';
 import { LoginDto } from './dto/login.dto';
 import * as argon from 'argon2';
@@ -8,11 +12,14 @@ import { SignupDto } from './dto/signup.dto';
 
 @Injectable()
 export class AuthService {
+  private readonly logger: Logger;
   constructor(
     private readonly database: DatabaseService,
     private readonly jwt: JwtService,
     private readonly config: ConfigService,
-  ) {}
+  ) {
+    this.logger = new Logger('Security Service');
+  }
 
   async login(dto: LoginDto) {
     try {
@@ -45,14 +52,18 @@ export class AuthService {
   }
 
   async signup(dto: SignupDto) {
-
     const { email, password } = dto;
 
-    const hash = await argon.hash(password);
+    try {
+      const hash = await argon.hash(password);
 
-    return await this.database.authentication.create({
-      data: { email: email, password: hash },
-    });
+      return await this.database.authentication.create({
+        data: { email: email, password: hash },
+      });
+    } catch (err) {
+      this.logger.error(`User with email: ${email} already exists.`);
+      throw new ConflictException(`User with email: ${email} already exists.`);
+    }
   }
 
   private async signToken(
