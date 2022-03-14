@@ -13,7 +13,7 @@ export class SkillService {
     return await this.database.skill.create({ data: createSkillDto });
   }
 
-  async findAll(): Promise<ReturnSkillDto[]> {
+  async getSkills(userId: string): Promise<ReturnSkillDto[]> {
     return await this.database.skill.findMany();
   }
 

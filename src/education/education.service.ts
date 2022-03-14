@@ -1,26 +1,61 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateEducationDto } from './dto/create-education.dto';
 import { UpdateEducationDto } from './dto/update-education.dto';
+import { DatabaseService } from '../database/database.service';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class EducationService {
-  create(createEducationDto: CreateEducationDto) {
-    return 'This action adds a new education';
+  constructor(
+    private readonly database: DatabaseService,
+    private readonly userService: UserService,
+  ) {}
+
+  async create(userId: string, createEducationDto: CreateEducationDto) {
+    const user = await this.userService.getUser(userId);
+    if (!user)
+      throw new NotFoundException(`User with id: ${userId} not found.`);
+    // @ts-ignore
+    return await this.database.education.create({ data: createEducationDto });
   }
 
-  findAll() {
-    return `This action returns all education`;
+  async getEducations(userId: string) {
+    return await this.database.user.findUnique({
+      where: { id: userId },
+      select: { educations: true },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} education`;
+  async findOne(userId: string, educationId: string) {
+    const user = await this.userService.getUser(userId);
+    if (!user)
+      throw new NotFoundException(`User with id: ${userId} not found.`);
+
+    const education = await this.database.education.findUnique({ where: { id: educationId } });
+    if (!education)
+      throw new NotFoundException(`Education with id: ${educationId} not found.`);
+
+    return education;
   }
 
-  update(id: number, updateEducationDto: UpdateEducationDto) {
-    return `This action updates a #${id} education`;
+  async update(userId: string, educationId: string, updateEducationDto: UpdateEducationDto) {
+    const education = await this.findOne(userId, educationId);
+    if (!education)
+      throw new NotFoundException(`Education with id: ${educationId} not found.`);
+    // @ts-ignore
+    return await this.database.education.update({
+      where: { id: education.id },
+      data: updateEducationDto,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} education`;
+  async remove(userId: string, educationId: string) {
+    const education = await this.findOne(userId, educationId);
+    if (!education)
+      throw new NotFoundException(`Education with id: ${educationId} not found.`);
+
+    return await this.database.education.delete({
+      where: { id: education.id },
+    });
   }
 }

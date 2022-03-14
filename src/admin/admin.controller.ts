@@ -41,18 +41,27 @@ export class AdminController {
     return await this.adminService.updateUserPassword(userId, password);
   }
 
+  @Patch('users/:user-id/update-password')
+  async updateUserEmail(
+    @Body() email: string,
+    @Param('user-id') userId: string,
+  ) {
+    return await this.adminService.updateUserEmail(userId, email);
+  }
+
   @UseInterceptors(
     FileInterceptor('image', {
       storage: memoryStorage(),
       limits: { fieldSize: 5000000 },
     }),
   )
-  @Patch('user-id/update-user-picture')
+  @Patch('users/user-id/picture/:picture-id/update-user-picture')
   async updateUserPicture(
     @Param('user-id') userId: string,
+    @Param('picture-id') pictureId: string,
     @UploadedFile() image: Express.Multer.File,
   ) {
-    return await this.adminService.updateUserPicture(userId, image);
+    return await this.adminService.updateUserPicture(userId, pictureId, image);
   }
 
   // Post
