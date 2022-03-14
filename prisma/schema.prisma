@@ -83,13 +83,13 @@ model Skill {
     id String @id @default(uuid()) @unique
     slug String? @db.VarChar(200)
     name String @db.VarChar(200)
-    description String @db.VarChar(200)
+    description String? @db.VarChar(200)
     is_active Boolean
     created_date DateTime @default(now())
     modified_date DateTime? @updatedAt
 
-    user_id String @unique
-    user User @relation(fields: [user_id], references: [id])
+    user_id String? @unique
+    user User? @relation(fields: [user_id], references: [id])
 
     post_id String? @unique
     post Post? @relation(fields: [post_id], references: [id])
@@ -99,7 +99,7 @@ model Service {
     id String @id @default(uuid()) @unique
     slug String? @db.VarChar(200)
     name String @db.VarChar(200)
-    description String @db.VarChar(200)
+    description String? @db.VarChar(200)
     is_active Boolean
     created_date DateTime @default(now())
     modified_date DateTime? @updatedAt

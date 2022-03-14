@@ -11,14 +11,14 @@ import {
   UploadedFiles,
   UseGuards,
 } from '@nestjs/common';
-import { CreateUserDto } from '../user/dto/create-user.dto';
-import { UpdateUserDto } from '../user/dto/update-user.dto';
 import { AdminService } from './admin.service';
 import { AnyFilesInterceptor, FileInterceptor } from '@nestjs/platform-express';
 import { memoryStorage } from 'multer';
-import { CreatePostDto } from '../post/dto/create-post.dto';
-import { UpdatePostDto } from '../post/dto/update-post.dto';
 import { JwtGuard } from '../auth/guard/jwt.guard';
+import { EmailDto } from '../user/dto/email.dto';
+import { PasswordDto } from '../user/dto/password.dto';
+import { PostDto } from '../post/dto/post.dto';
+import { UserDto } from '../user/dto/user.dto';
 
 @UseGuards(JwtGuard)
 @Controller('v1/admin')
@@ -27,31 +27,26 @@ export class AdminController {
 
   // User
   @Post('users/create-user')
-  async createUser(@Body() dto: CreateUserDto) {
-    return await this.adminService.createUser(dto);
+  async createUser(@Body() dto: UserDto) {
+    return await this.adminService.createOrUpdateUser(dto);
   }
 
-  @Put('users/:user_id/update-user')
-  async updateUser(
-    @Param('user_id') userId: string,
-    @Body() dto: UpdateUserDto,
-  ) {
-    return 'working';
-    return await this.adminService.updateUser(userId, dto);
+  @Put('users/update-user')
+  async updateUser(@Body() dto: UserDto) {
+    return await this.adminService.createOrUpdateUser(dto);
   }
 
   @Patch('users/:user_id/update-password')
   async updateUserPassword(
-    @Body() password: string,
+    @Body() passwordDto: PasswordDto,
     @Param('user_id') userId: string,
   ) {
-    return 'Working';
-    return await this.adminService.updateUserPassword(userId, password);
+    return await this.adminService.updateUserPassword(userId, passwordDto);
   }
 
-  @Patch('users/:user_id/update-password')
+  @Patch('users/:user_id/update-email')
   async updateUserEmail(
-    @Body() email: string,
+    @Body() email: EmailDto,
     @Param('user_id') userId: string,
   ) {
     return await this.adminService.updateUserEmail(userId, email);
@@ -76,7 +71,7 @@ export class AdminController {
   @Post('users/user_id/posts/create-post')
   async createPost(
     @Param('user_id') userId: string,
-    @Body() dto: CreatePostDto,
+    @Body() dto: PostDto,
   ) {
     // return await this.adminService.createPost(userId, dto);
   }
@@ -85,7 +80,7 @@ export class AdminController {
   async updatePost(
     @Param('user-id') userId: string,
     @Param('post-id') postId: string,
-    dto: UpdatePostDto,
+    dto: PostDto,
   ) {
     return await this.adminService.updatePost(userId, postId, dto);
   }

@@ -6,10 +6,10 @@ import { PictureService } from '../picture/picture.service';
 import { PostService } from '../post/post.service';
 import { ServiceService } from '../service/service.service';
 import { SkillService } from '../skill/skill.service';
-import { CreateUserDto } from '../user/dto/create-user.dto';
-import { UpdateUserDto } from '../user/dto/update-user.dto';
-import { CreatePostDto } from '../post/dto/create-post.dto';
-import { UpdatePostDto } from '../post/dto/update-post.dto';
+import { EmailDto } from '../user/dto/email.dto';
+import { PasswordDto } from '../user/dto/password.dto';
+import { UserDto } from '../user/dto/user.dto';
+import { PostDto } from '../post/dto/post.dto';
 
 @Injectable()
 export class AdminService {
@@ -23,19 +23,15 @@ export class AdminService {
     private readonly skillService: SkillService,
   ) {}
 
-  async createUser(dto: CreateUserDto) {
-    return await this.userService.createUser(dto);
+  async createOrUpdateUser(dto: UserDto) {
+    return await this.userService.createOrUpdateUser(dto);
   }
 
-  async updateUser(userId: string, dto: UpdateUserDto) {
-    return await this.userService.updateUser(userId, dto);
+  async updateUserPassword(userId: string, passwordDto: PasswordDto) {
+    return await this.userService.updateUserPassword(userId, passwordDto);
   }
 
-  async updateUserPassword(userId: string, password: string) {
-    return await this.userService.updateUserPassword(userId, password);
-  }
-
-  async updateUserEmail(userId: string, email: string) {
+  async updateUserEmail(userId: string, email: EmailDto) {
     return await this.userService.updateUserEmail(userId, email);
   }
 
@@ -44,18 +40,22 @@ export class AdminService {
     pictureId: string,
     image: Express.Multer.File,
   ) {
-    return await this.userService.updateUserPicture(userId, pictureId, image);
+    return await this.pictureService.createOrUpdateUserPicture(
+      userId,
+      pictureId,
+      image,
+    );
   }
 
   async createPost(
     userId: string,
-    dto: CreatePostDto,
+    dto: PostDto,
     images: Array<Express.Multer.File>,
   ) {
     return Promise.resolve(undefined);
   }
 
-  async updatePost(userId: string, postId: string, dto: UpdatePostDto) {
+  async updatePost(userId: string, postId: string, dto: PostDto) {
     return Promise.resolve(undefined);
   }
 

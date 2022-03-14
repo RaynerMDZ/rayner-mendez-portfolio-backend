@@ -7,9 +7,7 @@ import { PictureService } from '../picture/picture.service';
 import { PostService } from '../post/post.service';
 import { ServiceService } from '../service/service.service';
 import { SkillService } from '../skill/skill.service';
-import { LoggerMiddleware } from '../utils/middlewares/logger.middleware';
-import { CreateUserDto } from "./dto/create-user.dto";
-import { UpdateUserDto } from "./dto/update-user.dto";
+import { UserDto } from './dto/user.dto';
 
 @Module({
   controllers: [UserController],
@@ -21,8 +19,7 @@ import { UpdateUserDto } from "./dto/update-user.dto";
     PostService,
     ServiceService,
     SkillService,
-    CreateUserDto,
-    UpdateUserDto,
+    UserDto,
   ],
 })
 export class UserModule {

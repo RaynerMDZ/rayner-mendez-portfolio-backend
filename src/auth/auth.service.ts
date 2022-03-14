@@ -2,7 +2,7 @@ import {
   ConflictException,
   ForbiddenException,
   Injectable, Logger
-} from "@nestjs/common";
+} from '@nestjs/common';
 import { DatabaseService } from '../database/database.service';
 import { LoginDto } from './dto/login.dto';
 import * as argon from 'argon2';

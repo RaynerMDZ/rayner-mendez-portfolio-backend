@@ -1,7 +1,15 @@
-import { ConflictException, Injectable, Logger, NotFoundException } from "@nestjs/common";
+import {
+  ConflictException,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { DatabaseService } from '../database/database.service';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { CreateUserDto } from './dto/create-user.dto';
+import * as argon from 'argon2';
+import { EmailDto } from './dto/email.dto';
+import { PasswordDto } from './dto/password.dto';
+import { Prisma } from '@prisma/client';
+import { UserDto } from './dto/user.dto';
 
 @Injectable()
 export class UserService {
@@ -60,7 +68,7 @@ export class UserService {
     });
   }
 
-  async createUser(dto: CreateUserDto) {
+  async createOrUpdateUser(dto: UserDto) {
     const {
       id,
       slug,
@@ -77,8 +85,9 @@ export class UserService {
     } = dto;
 
     try {
-      return await this.database.user.create({
-        data: {
+      return await this.database.user.upsert({
+        where: { id: id },
+        create: {
           id: id,
           slug: slug,
           first_name: firstName,
@@ -92,35 +101,59 @@ export class UserService {
           twitter: twitter,
           resume_url: resumeUrl,
         },
+        update: {
+          slug: slug,
+          first_name: firstName,
+          middle_name: middleName,
+          last_name: lastName,
+          phone_number: phoneNumber,
+          location: location,
+          summary: summary,
+          github: github,
+          linkedin: linkedin,
+          twitter: twitter,
+          resume_url: resumeUrl,
+          modified_date: new Date(),
+        },
       });
     } catch (err) {
-      this.logger.error(`User with id: ${id} already exists.`);
-      throw new ConflictException(`User with id: ${id} already exists.`);
+      if (err instanceof Prisma.PrismaClientKnownRequestError) {
+        this.logger.error(`User with id: ${id} already exists.`);
+        throw new ConflictException(`User with id: ${id} already exists.`);
+      }
     }
   }
 
-  async updateUser(userId: string, dto: UpdateUserDto) {
-    return false;
+  async updateUserPassword(userId: string, passwordDto: PasswordDto) {
+    const { password } = passwordDto;
+    const hash = await argon.hash(password);
+    const user = await this.getUser(userId);
+
+    return await this.database.authentication.update({
+      where: { id: user.id },
+      data: { password: hash, modified_date: new Date() },
+      select: {
+        id: true,
+        email: true,
+        created_date: true,
+        modified_date: true,
+      },
+    });
   }
 
-  async updateUserPassword(userId: string, password: string) {
-    return false;
-  }
+  async updateUserEmail(userId: string, emailDto: EmailDto) {
+    const { email } = emailDto;
+    const user = await this.getUser(userId);
 
-  async updateUserEmail(userId: string, email: string) {
-    return false;
-  }
-
-  async updateUserPicture(
-    userId: string,
-    pictureId: string,
-    image: Express.Multer.File,
-  ) {
-    // return await this.pictureService.updateUserPicture(
-    //   userId,
-    //   pictureId,
-    //   image,
-    // );
-    return false;
+    return await this.database.authentication.update({
+      where: { id: user.id },
+      data: { email: email, modified_date: new Date() },
+      select: {
+        id: true,
+        email: true,
+        created_date: true,
+        modified_date: true,
+      },
+    });
   }
 }

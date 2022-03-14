@@ -12,11 +12,11 @@ export class PostController {
 
   @Get(':id/pictures')
   async getPictures(@Param('id') id: string) {
-    return await this.postService.getPictures(id);
+    return await this.postService.getUserPostPictures(id);
   }
 
   @Get(':id/skills')
   async getSkills(@Param('id') id: string) {
-    return await this.postService.getSkills(id);
+    return await this.postService.getUserPostSkills(id);
   }
 }

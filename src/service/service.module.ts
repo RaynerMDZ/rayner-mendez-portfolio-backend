@@ -1,10 +1,8 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ServiceService } from './service.service';
-import { LoggerMiddleware } from '../utils/middlewares/logger.middleware';
+import { UserService } from '../user/user.service';
 
 @Module({
-  providers: [ServiceService],
+  providers: [ServiceService, UserService],
 })
-export class ServiceModule {
-
-}
+export class ServiceModule {}
