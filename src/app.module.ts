@@ -13,6 +13,7 @@ import { ServiceModule } from './service/service.module';
 import { EducationModule } from './education/education.module';
 import { EmploymentModule } from './employment/employment.module';
 import { LoggerMiddleware } from './utils/middlewares/logger.middleware';
+import { MicrosoftAzureBlobStorageModule } from './microsoft-azure-blob-storage/microsoft-azure-blob-storage.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { LoggerMiddleware } from './utils/middlewares/logger.middleware';
     ServiceModule,
     EducationModule,
     EmploymentModule,
+    MicrosoftAzureBlobStorageModule,
   ],
 })
 export class AppModule implements NestModule {
