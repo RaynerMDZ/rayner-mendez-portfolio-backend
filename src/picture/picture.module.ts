@@ -1,10 +1,9 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { PictureService } from './picture.service';
-import { LoggerMiddleware } from '../utils/middlewares/logger.middleware';
+import { UserService } from '../user/user.service';
+import { MicrosoftAzureBlobStorageService } from '../microsoft-azure-blob-storage/microsoft-azure-blob-storage.service';
 
 @Module({
-  providers: [PictureService],
+  providers: [PictureService, UserService, MicrosoftAzureBlobStorageService],
 })
-export class PictureModule {
-
-}
+export class PictureModule {}

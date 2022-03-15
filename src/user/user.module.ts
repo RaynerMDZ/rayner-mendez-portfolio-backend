@@ -8,6 +8,7 @@ import { PostService } from '../post/post.service';
 import { ServiceService } from '../service/service.service';
 import { SkillService } from '../skill/skill.service';
 import { UserDto } from './dto/user.dto';
+import { MicrosoftAzureBlobStorageService } from '../microsoft-azure-blob-storage/microsoft-azure-blob-storage.service';
 
 @Module({
   controllers: [UserController],
@@ -20,6 +21,7 @@ import { UserDto } from './dto/user.dto';
     ServiceService,
     SkillService,
     UserDto,
+    MicrosoftAzureBlobStorageService,
   ],
 })
 export class UserModule {

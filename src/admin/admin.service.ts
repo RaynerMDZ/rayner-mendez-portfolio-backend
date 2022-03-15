@@ -10,6 +10,7 @@ import { PasswordDto } from '../user/dto/password.dto';
 import { UserDto } from '../user/dto/user.dto';
 import { PostDto } from '../post/dto/post.dto';
 import { Injectable } from '@nestjs/common';
+import { PictureDto } from "../picture/dto/picture.dto";
 
 @Injectable()
 export class AdminService {
@@ -35,14 +36,14 @@ export class AdminService {
     return await this.userService.updateUserEmail(userId, email);
   }
 
-  async updateUserPicture(
+  async createOrUpdateUserPicture(
     userId: string,
-    pictureId: string,
+    pictureDto: PictureDto,
     image: Express.Multer.File,
   ) {
     return await this.pictureService.createOrUpdateUserPicture(
       userId,
-      pictureId,
+      pictureDto,
       image,
     );
   }

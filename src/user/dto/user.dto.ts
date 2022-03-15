@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsPhoneNumber, IsString, IsUrl } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsPhoneNumber, IsString, IsUrl } from "class-validator";
 import { PostDto } from '../../post/dto/post.dto';
 import { SkillDto } from '../../skill/dto/skill.dto';
 import { PictureDto } from '../../picture/dto/picture.dto';
@@ -48,6 +48,7 @@ export class UserDto {
 
   @IsString()
   @IsUrl()
+  @IsOptional()
   resumeUrl: string;
 
   profilePicture: PictureDto;

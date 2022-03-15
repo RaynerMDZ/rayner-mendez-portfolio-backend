@@ -8,6 +8,7 @@ import { PostService } from '../post/post.service';
 import { ServiceService } from '../service/service.service';
 import { SkillService } from '../skill/skill.service';
 import { UserService } from '../user/user.service';
+import { MicrosoftAzureBlobStorageService } from '../microsoft-azure-blob-storage/microsoft-azure-blob-storage.service';
 
 @Module({
   controllers: [AdminController],
@@ -20,6 +21,7 @@ import { UserService } from '../user/user.service';
     PostService,
     ServiceService,
     SkillService,
+    MicrosoftAzureBlobStorageService
   ],
 })
 export class AdminModule {}

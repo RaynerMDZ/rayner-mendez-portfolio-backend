@@ -19,13 +19,15 @@ import { EmailDto } from '../user/dto/email.dto';
 import { PasswordDto } from '../user/dto/password.dto';
 import { PostDto } from '../post/dto/post.dto';
 import { UserDto } from '../user/dto/user.dto';
+import { PictureDto } from '../picture/dto/picture.dto';
 
-@UseGuards(JwtGuard)
+
 @Controller('v1/admin')
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 
   // User
+  @UseGuards(JwtGuard)
   @Post('users/create-user')
   async createUser(@Body() dto: UserDto) {
     return await this.adminService.createOrUpdateUser(dto);
@@ -58,13 +60,9 @@ export class AdminController {
       limits: { fieldSize: 5000000 },
     }),
   )
-  @Patch('users/user_id/picture/:picture_id/update-user-picture')
-  async updateUserPicture(
-    @Param('user_id') userId: string,
-    @Param('picture_id') pictureId: string,
-    @UploadedFile() image: Express.Multer.File,
-  ) {
-    return await this.adminService.updateUserPicture(userId, pictureId, image);
+  @Patch('users/:user_id/pictures/update-user-picture')
+  async updateUserPicture(@Param('user_id') userId: string, @Body() pictureDto: PictureDto, @UploadedFile() image: Express.Multer.File,) {
+    return await this.adminService.createOrUpdateUserPicture(userId, pictureDto, image);
   }
 
   // Post

@@ -1,11 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { BlobServiceClient } from '@azure/storage-blob';
-import { randomUUID } from "crypto";
 
 @Injectable()
 export class MicrosoftAzureBlobStorageService {
   private readonly connectionString: string;
+
   constructor(private readonly config: ConfigService) {
     this.connectionString = config.get('AZURE_STORAGE_CONNECTION_STRING');
     if (!this.connectionString) {
@@ -13,32 +13,82 @@ export class MicrosoftAzureBlobStorageService {
     }
   }
 
-  containerClient() {
+  createBlobServiceClient() {
     return BlobServiceClient.fromConnectionString(this.connectionString);
   }
 
-  async createContainer() {
+  async createContainerClient() {
     const containerName = 'rayner-mendez-portfolio';
-    const containerClient = this.containerClient().getContainerClient(containerName);
-    const createContainerResponse = await containerClient.create();
-    console.log('Container was created successfully. requestId: ', createContainerResponse.requestId);
+    const containerClient =
+      this.createBlobServiceClient().getContainerClient(containerName);
+    const createContainerResponse = await containerClient.createIfNotExists();
+    console.log(
+      'Container was created successfully. requestId: ',
+      createContainerResponse.requestId,
+    );
+    return containerClient;
   }
 
-  async createFile(userId: string, postId: string, file: Express.Multer.File) {
-    let blobName;
-    if (userId && postId) {
-      blobName = this.generateUserPostFileName(userId, postId, file);
-    } else if (userId && !postId) {
-      blobName = this.generateUserFileName(userId, file);
-    }
+  async createBlobClient(blobName: string) {
+    const containerClient = await this.createContainerClient();
+    return containerClient.getBlockBlobClient(blobName);
+  }
+
+  async uploadUserImage(userId: string, file: Express.Multer.File): Promise<string> {
+    if (!userId)
+      throw new NotFoundException(`User with id: ${userId} is empty. Please provide user.id.`);
+
+
+    const blobName: string = await this.generateUserFileName(userId, file);
+
     console.log(blobName);
+
+    const blobClient = await this.createBlobClient(blobName);
+    const response = await blobClient.upload(file.buffer, file.buffer.length);
+
+    console.log(response._response.status);
+    console.log(blobClient.url);
+    return blobClient.url;
   }
 
-  async generateUserFileName(userId: string, file: Express.Multer.File) {
-    return `userid-${userId}-file-${file.filename}`;
+  async uploadUserPostImage(userId: string, postId: string, file: Express.Multer.File): Promise<string> {
+    if (!userId && !postId) {
+      throw new NotFoundException(
+        `User with id: ${userId} and Post with id: ${postId} are empty. Please provide user.id and post.id.`,
+      );
+    }
+
+    const blobName: string = await this.generateUserPostFileName(userId, postId, file);
+    const blobClient = await this.createBlobClient(blobName);
+    const response = await blobClient.upload(file.buffer, file.buffer.length);
+
+    console.log(response._response);
+    console.log(blobClient.url);
+    return blobClient.url;
   }
 
-  async generateUserPostFileName(userId: string, postId: string, file: Express.Multer.File) {
-    return `userid-${userId}-postid-${postId}-file-${file.filename}`;
+  async generateUserFileName(
+    userId: string,
+    file: Express.Multer.File,
+  ): Promise<string> {
+    return `userid-${userId}-file-${await this.getFileName(file)}.${await this.getFileExtension(file)}`;
+  }
+
+  async generateUserPostFileName(
+    userId: string,
+    postId: string,
+    file: Express.Multer.File,
+  ): Promise<string> {
+    return `userid-${userId}-postid-${postId}-file-${
+      await this.getFileName(file)
+    }.${await this.getFileExtension(file)}`;
+  }
+
+  async getFileExtension(file: Express.Multer.File) {
+    return file.originalname.split('.').pop();
+  }
+
+  async getFileName(file: Express.Multer.File) {
+    return file.originalname.split('.')[0];
   }
 }
