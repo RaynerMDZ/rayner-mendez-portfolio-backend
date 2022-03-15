@@ -40,14 +40,27 @@ export class ServiceService {
     });
   }
 
-  async getUserServices() {
-    return `This action returns all service`;
+  async getUserServices(userId: string) {
+    return await this.database.user.findUnique({
+      where: { id: userId },
+      select: {
+        services: {
+          where: { is_active: true },
+        },
+      },
+    });
   }
 
-  async getUserService(id: string) {
-    return `This action returns a #${id} service`;
+  async getUserService(userId: string, serviceId: string) {
+    return await this.database.user.findUnique({
+      where: { id: userId },
+      select: {
+        services: {
+          where: { id: serviceId },
+        },
+      },
+    });
   }
-
 
   async removeService(userId: string, serviceId: string) {
     const user = this.userService.getUser(userId);

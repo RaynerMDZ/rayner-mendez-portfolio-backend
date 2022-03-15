@@ -13,8 +13,39 @@ export class PostService {
     this.logger = new Logger('Post Service');
   }
 
-  async createOrUpdateUserPost(postDto: PostDto) {
+  async createOrUpdateUserPost(user_id: string, postDto: PostDto) {
+    const { id, slug, userId, url, isActive, github, title, description } = postDto;
 
+    const user = await this.userService.getUser(userId);
+    if (!user)
+      throw new NotFoundException(`User with id: ${user_id} not found.`);
+
+    try {
+      return await this.database.post.upsert({
+        where: { id: id },
+        create: {
+          slug: slug,
+          title: title,
+          description: description,
+          github: github,
+          url: url,
+          is_active: true,
+          user_id: user.id,
+        },
+        update: {
+          slug: slug,
+          title: title,
+          description: description,
+          github: github,
+          url: url,
+          is_active: isActive,
+          user_id: user.id,
+          modified_date: new Date(),
+        },
+      });
+    } catch (err) {
+      throw new NotFoundException(err);
+    }
   }
 
   async getUserPosts(userId: string, page: number, pageSize: number) {

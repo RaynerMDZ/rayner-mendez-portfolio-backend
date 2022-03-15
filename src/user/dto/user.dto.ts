@@ -1,8 +1,8 @@
-import { IsNotEmpty, IsPhoneNumber, IsString } from 'class-validator';
-import { PostDto } from "../../post/dto/post.dto";
-import { SkillDto } from "../../skill/dto/skill.dto";
-import { PictureDto } from "../../picture/dto/picture.dto";
-import { ServiceDto } from "../../service/dto/service.dto";
+import { IsNotEmpty, IsPhoneNumber, IsString, IsUrl } from 'class-validator';
+import { PostDto } from '../../post/dto/post.dto';
+import { SkillDto } from '../../skill/dto/skill.dto';
+import { PictureDto } from '../../picture/dto/picture.dto';
+import { ServiceDto } from '../../service/dto/service.dto';
 
 export class UserDto {
   @IsString()
@@ -35,15 +35,19 @@ export class UserDto {
   summary: string;
 
   @IsString()
+  @IsUrl()
   github: string;
 
   @IsString()
+  @IsUrl()
   linkedin: string;
 
   @IsString()
+  @IsUrl()
   twitter: string;
 
   @IsString()
+  @IsUrl()
   resumeUrl: string;
 
   profilePicture: PictureDto;

@@ -1,17 +1,30 @@
-import { SkillDto } from '../../skill/dto/skill.dto';
-import { PictureDto } from '../../picture/dto/picture.dto';
+import { IsBoolean, IsNotEmpty, IsString, IsUrl } from 'class-validator';
 
 export class PostDto {
+  @IsString()
   id: string;
+
+  @IsString()
   slug: string;
+
+  @IsString()
+  @IsNotEmpty()
   title: string;
+
+  @IsString()
   description: string;
+
+  @IsString()
+  @IsUrl()
   github: string;
+
+  @IsUrl()
+  @IsString()
   url: string;
-  isActive: string;
-  createdDate: string;
-  modifiedDate: string;
-  pictures: PictureDto[];
-  skills: SkillDto[];
+
+  @IsBoolean()
+  isActive: boolean;
+
+  @IsString()
   userId: string;
 }

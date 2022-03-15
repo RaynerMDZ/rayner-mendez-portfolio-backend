@@ -1,9 +1,8 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { EmploymentService } from './employment.service';
-import { LoggerMiddleware } from '../utils/middlewares/logger.middleware';
+import { UserService } from '../user/user.service';
 
 @Module({
-  providers: [EmploymentService],
+  providers: [EmploymentService, UserService],
 })
-export class EmploymentModule {
-}
+export class EmploymentModule {}

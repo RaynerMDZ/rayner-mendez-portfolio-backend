@@ -49,6 +49,15 @@ export class SkillService {
     });
   }
 
+  async getUserSkill(userId: string, skillId: string) {
+    return await this.database.user.findUnique({
+      where: { id: userId },
+      select: {
+        skills: { where: { id: skillId } },
+      },
+    });
+  }
+
   async createOrUpdateUserPostSkills(
     userId: string,
     postId: string,
@@ -66,7 +75,7 @@ export class SkillService {
             slug: slug,
             name: name,
             description: description,
-            is_active: isActive,
+            is_active: true,
             post_id: post.id,
           },
           update: {
@@ -90,18 +99,40 @@ export class SkillService {
       select: {
         posts: {
           where: { id: postId },
-          select: { skills: true },
+          select: {
+            skills: {
+              where: {
+                is_active: true,
+              },
+            },
+          },
         },
       },
     });
   }
 
   async removeUserSkill(userId: string, skillId: string) {
+    const user = await this.userService.getUser(userId);
+    if (!user)
+      throw new ConflictException(`User with id: ${userId} Does not exists.`);
 
+    return await this.database.skill.delete({
+      where: { id: skillId },
+    });
   }
 
-  async removeUserPostSkill(userId: string, skillId: string) {
+  async removeUserPostSkill(userId: string, postId: string, skillId: string) {
+    const user = await this.userService.getUser(userId);
+    if (!user)
+      throw new ConflictException(`User with id: ${userId} Does not exists.`);
 
+    const post = await this.postService.getUserPost(user.id, postId);
+    if (!post)
+      throw new ConflictException(`Post with id: ${postId} Does not exists.`);
+
+    return await this.database.skill.delete({
+      where: { id: skillId },
+    });
   }
 
   async toggleActiveOrUnactiveSkill(userId: string, skillId: string) {
