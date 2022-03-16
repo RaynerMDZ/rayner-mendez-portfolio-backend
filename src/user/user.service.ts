@@ -24,48 +24,6 @@ export class UserService {
     return user;
   }
 
-  async getUserPosts(userId: string, page: number, pageSize: number) {
-    const user = await this.getUser(userId);
-
-    return await this.database.post.findMany({
-      where: { user_id: user.id },
-      skip: page,
-      take: pageSize,
-    });
-  }
-
-  async getUserPost(userId: string, postId: string) {
-    const user = await this.getUser(userId);
-    return await this.database.user.findUnique({
-      where: { id: user.id },
-      select: { posts: { where: { id: postId } } },
-    });
-  }
-
-  async getUserSKills(userId: string) {
-    const user = await this.getUser(userId);
-    return await this.database.user.findUnique({
-      where: { id: user.id },
-      select: { skills: true },
-    });
-  }
-
-  async getUserEducation(userId: string) {
-    const user = await this.getUser(userId);
-    return await this.database.user.findUnique({
-      where: { id: user.id },
-      select: { educations: true },
-    });
-  }
-
-  async getUserEmployment(userId: string) {
-    const user = await this.getUser(userId);
-    return await this.database.user.findUnique({
-      where: { id: user.id },
-      select: { employments: true },
-    });
-  }
-
   async createOrUpdateUser(dto: UserDto) {
     const {
       id,
