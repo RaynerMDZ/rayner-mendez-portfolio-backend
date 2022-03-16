@@ -27,12 +27,12 @@ export class AdminController {
 
   // User
   @UseGuards(JwtGuard)
-  @Post('users/create-user')
+  @Post('users')
   async createUser(@Body() dto: UserDto) {
     return await this.adminService.createOrUpdateUser(dto);
   }
 
-  @Put('users/update-user')
+  @Put('users')
   async updateUser(@Body() dto: UserDto) {
     return await this.adminService.createOrUpdateUser(dto);
   }
@@ -59,13 +59,13 @@ export class AdminController {
       limits: { fieldSize: 5000000 },
     }),
   )
-  @Patch('users/:user_id/pictures/update-user-image')
+  @Patch('users/:user_id/pictures')
   async updateUserPicture(@Param('user_id') userId: string, @Body() pictureDto: ImageDto, @UploadedFile() image: Express.Multer.File,) {
     return await this.adminService.createOrUpdateUserPicture(userId, pictureDto, image);
   }
 
   // Post
-  @Post('users/user_id/posts/create-post')
+  @Post('users/user_id/posts')
   async createPost(
     @Param('user_id') userId: string,
     @Body() dto: PostDto,
@@ -73,10 +73,10 @@ export class AdminController {
     // return await this.adminService.createPost(userId, dto);
   }
 
-  @Post('users/user-id/posts/:post-id/update-post')
+  @Put('users/user_id/posts/:post_id')
   async updatePost(
-    @Param('user-id') userId: string,
-    @Param('post-id') postId: string,
+    @Param('user_id') userId: string,
+    @Param('post_id') postId: string,
     dto: PostDto,
   ) {
     return await this.adminService.updatePost(userId, postId, dto);
