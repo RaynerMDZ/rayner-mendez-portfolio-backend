@@ -66,6 +66,12 @@ export class EducationService {
   }
 
   async getUserEducations(userId: string) {
+    const user = await this.userService.getUser(userId);
+    if (!user) {
+      this.logger.error(`User with id: ${userId} not found.`);
+      throw new NotFoundException(`User with id: ${userId} not found.`);
+    }
+
     return await this.database.user.findUnique({
       where: { id: userId },
       select: { educations: true },
@@ -74,8 +80,10 @@ export class EducationService {
 
   async getUserEducation(userId: string, educationId: string) {
     const user = await this.userService.getUser(userId);
-    if (!user)
+    if (!user) {
+      this.logger.error(`User with id: ${userId} not found.`);
       throw new NotFoundException(`User with id: ${userId} not found.`);
+    }
 
     const education = await this.database.education.findUnique({
       where: { id: educationId },
@@ -97,6 +105,7 @@ export class EducationService {
 
     return await this.database.education.delete({
       where: { id: education.id },
+      select: { id: true },
     });
   }
 }

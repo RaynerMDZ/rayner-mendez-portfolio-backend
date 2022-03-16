@@ -1,11 +1,9 @@
-import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AuthModule } from './auth/auth.module';
 import { DatabaseModule } from './database/database.module';
 import { ConfigModule } from '@nestjs/config';
-import { LoginDto } from './auth/dto/login.dto';
-import { SignupDto } from './auth/dto/signup.dto';
 import { PostModule } from './post/post.module';
-import { PictureModule } from './picture/picture.module';
+import { ImageModule } from './image/image.module';
 import { SkillModule } from './skill/skill.module';
 import { AdminModule } from './admin/admin.module';
 import { UserModule } from './user/user.module';
@@ -21,7 +19,7 @@ import { MicrosoftAzureBlobStorageModule } from './microsoft-azure-blob-storage/
     AuthModule,
     DatabaseModule,
     PostModule,
-    PictureModule,
+    ImageModule,
     SkillModule,
     AdminModule,
     UserModule,

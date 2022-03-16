@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { DatabaseService } from '../database/database.service';
 import { UserService } from '../user/user.service';
 import { PostDto } from './dto/post.dto';
@@ -17,8 +17,12 @@ export class PostService {
     const { id, slug, userId, url, isActive, github, title, description } = postDto;
 
     const user = await this.userService.getUser(userId);
-    if (!user)
+    if (!user) {
+      this.logger.error(`User with id: ${user_id} not found.`);
       throw new NotFoundException(`User with id: ${user_id} not found.`);
+    }
+
+    this.logger.log(`Creating or updating post.`);
 
     try {
       return await this.database.post.upsert({
@@ -44,7 +48,8 @@ export class PostService {
         },
       });
     } catch (err) {
-      throw new NotFoundException(err);
+      this.logger.error(err);
+      throw new ConflictException(err);
     }
   }
 
@@ -72,21 +77,15 @@ export class PostService {
     return post;
   }
 
-  async getUserPostPictures(id: string) {
-    const post = await this.database.post.findUnique({
-      where: { id: id },
-      include: { pictures: true },
+  async removeUserPost(userId: string, postId: string) {
+    this.logger.log('Removing user post.');
+    const post = await this.getUserPost(userId, postId);
+
+    return await this.database.post.delete({
+      where: { id: post.id },
+      select: {
+        id: true,
+      },
     });
-
-    return post.pictures;
-  }
-
-  async getUserPostSkills(id: string) {
-    const post = await this.database.post.findUnique({
-      where: { id: id },
-      include: { skills: true },
-    });
-
-    return post.skills;
   }
 }

@@ -41,21 +41,30 @@ export class EmploymentService {
         slug: slug,
         location: location,
         company: company,
+        modified_date: new Date(),
       },
     });
   }
 
   async getUserEmployments(userId: string) {
+    const user = await this.userService.getUser(userId);
+    if (!user) {
+      this.logger.error(`User with id: ${userId} not found.`);
+      throw new NotFoundException(`User with id: ${userId} not found.`);
+    }
+
     return await this.database.user.findUnique({
-      where: { id: userId },
+      where: { id: user.id },
       select: { employments: true },
     });
   }
 
   async getUserEmployment(userId: string, employmentId: string) {
     const user = await this.userService.getUser(userId);
-    if (!user)
+    if (!user) {
+      this.logger.error(`User with id: ${userId} not found.`);
       throw new NotFoundException(`User with id: ${userId} not found.`);
+    }
 
     const employment = await this.database.employment.findUnique({
       where: { id: employmentId },
@@ -69,6 +78,12 @@ export class EmploymentService {
   }
 
   async removeUserEmployment(userId: string, employmentId: string) {
+    const user = await this.userService.getUser(userId);
+    if (!user) {
+      this.logger.error(`User with id: ${userId} not found.`);
+      throw new NotFoundException(`User with id: ${userId} not found.`);
+    }
+
     const employment = await this.getUserEmployment(userId, employmentId);
     if (!employment)
       throw new NotFoundException(

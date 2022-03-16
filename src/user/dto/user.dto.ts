@@ -1,7 +1,7 @@
 import { IsNotEmpty, IsOptional, IsPhoneNumber, IsString, IsUrl } from "class-validator";
 import { PostDto } from '../../post/dto/post.dto';
 import { SkillDto } from '../../skill/dto/skill.dto';
-import { PictureDto } from '../../picture/dto/picture.dto';
+import { ImageDto } from '../../image/dto/image.dto';
 import { ServiceDto } from '../../service/dto/service.dto';
 
 export class UserDto {
@@ -51,7 +51,7 @@ export class UserDto {
   @IsOptional()
   resumeUrl: string;
 
-  profilePicture: PictureDto;
+  profilePicture: ImageDto;
   skills: SkillDto[];
   services: ServiceDto[];
   posts: PostDto[];

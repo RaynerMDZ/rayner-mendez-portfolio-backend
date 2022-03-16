@@ -1,6 +1,6 @@
 import { IsBoolean, IsNotEmpty, IsOptional, IsString, IsUrl } from "class-validator";
 
-export class PictureDto {
+export class ImageDto {
   @IsString()
   @IsOptional()
   id: string;

@@ -3,7 +3,7 @@ import { UserService } from './user.service';
 import { UserController } from './user.controller';
 import { EmploymentService } from '../employment/employment.service';
 import { EducationService } from '../education/education.service';
-import { PictureService } from '../picture/picture.service';
+import { ImageService } from '../image/image.service';
 import { PostService } from '../post/post.service';
 import { ServiceService } from '../service/service.service';
 import { SkillService } from '../skill/skill.service';
@@ -16,7 +16,7 @@ import { MicrosoftAzureBlobStorageService } from '../microsoft-azure-blob-storag
     UserService,
     EmploymentService,
     EducationService,
-    PictureService,
+    ImageService,
     PostService,
     ServiceService,
     SkillService,

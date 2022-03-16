@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { BlobServiceClient } from '@azure/storage-blob';
 
@@ -18,7 +22,7 @@ export class MicrosoftAzureBlobStorageService {
   }
 
   async createContainerClient() {
-    const containerName = 'rayner-mendez-portfolio';
+    const containerName = this.config.get('AZURE_STORAGE_CONTAINER_NAME');
     const containerClient =
       this.createBlobServiceClient().getContainerClient(containerName);
     const createContainerResponse = await containerClient.createIfNotExists();
@@ -38,17 +42,18 @@ export class MicrosoftAzureBlobStorageService {
     if (!userId)
       throw new NotFoundException(`User with id: ${userId} is empty. Please provide user.id.`);
 
+    try {
+      const blobName: string = await this.generateUserFileName(userId, file);
 
-    const blobName: string = await this.generateUserFileName(userId, file);
+      const blobClient = await this.createBlobClient(blobName);
+      const response = await blobClient.upload(file.buffer, file.buffer.length);
 
-    console.log(blobName);
-
-    const blobClient = await this.createBlobClient(blobName);
-    const response = await blobClient.upload(file.buffer, file.buffer.length);
-
-    console.log(response._response.status);
-    console.log(blobClient.url);
-    return blobClient.url;
+      console.log(response._response.status);
+      console.log(blobClient.url);
+      return blobClient.url;
+    } catch (e) {
+      throw new ConflictException(e);
+    }
   }
 
   async uploadUserPostImage(userId: string, postId: string, file: Express.Multer.File): Promise<string> {
@@ -58,13 +63,17 @@ export class MicrosoftAzureBlobStorageService {
       );
     }
 
-    const blobName: string = await this.generateUserPostFileName(userId, postId, file);
-    const blobClient = await this.createBlobClient(blobName);
-    const response = await blobClient.upload(file.buffer, file.buffer.length);
+    try {
+      const blobName: string = await this.generateUserPostFileName(userId, postId, file);
+      const blobClient = await this.createBlobClient(blobName);
+      const response = await blobClient.upload(file.buffer, file.buffer.length);
 
-    console.log(response._response);
-    console.log(blobClient.url);
-    return blobClient.url;
+      console.log(response._response);
+      console.log(blobClient.url);
+      return blobClient.url;
+    } catch (e) {
+      throw new ConflictException(e);
+    }
   }
 
   async generateUserFileName(

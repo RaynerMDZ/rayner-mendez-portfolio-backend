@@ -4,7 +4,6 @@ import {
   Body,
   Patch,
   Param,
-  Delete,
   Put,
   UploadedFile,
   UseInterceptors,
@@ -19,7 +18,7 @@ import { EmailDto } from '../user/dto/email.dto';
 import { PasswordDto } from '../user/dto/password.dto';
 import { PostDto } from '../post/dto/post.dto';
 import { UserDto } from '../user/dto/user.dto';
-import { PictureDto } from '../picture/dto/picture.dto';
+import { ImageDto } from '../image/dto/image.dto';
 
 
 @Controller('v1/admin')
@@ -60,8 +59,8 @@ export class AdminController {
       limits: { fieldSize: 5000000 },
     }),
   )
-  @Patch('users/:user_id/pictures/update-user-picture')
-  async updateUserPicture(@Param('user_id') userId: string, @Body() pictureDto: PictureDto, @UploadedFile() image: Express.Multer.File,) {
+  @Patch('users/:user_id/pictures/update-user-image')
+  async updateUserPicture(@Param('user_id') userId: string, @Body() pictureDto: ImageDto, @UploadedFile() image: Express.Multer.File,) {
     return await this.adminService.createOrUpdateUserPicture(userId, pictureDto, image);
   }
 
@@ -104,11 +103,11 @@ export class AdminController {
       limits: { fieldSize: 5000000 },
     }),
   )
-  @Put('users/:user-id/posts/:post-id/pictures/:picture-id')
+  @Put('users/:user-id/posts/:post-id/pictures/:image-id')
   async updatePostPicture(
     @Param('user-id') userId: string,
     @Param('post-id') postId: string,
-    @Param('picture-id') pictureId: string,
+    @Param('image-id') pictureId: string,
     @UploadedFile() image: Express.Multer.File,
   ) {
     return await this.adminService.updatePostPicture(

@@ -20,9 +20,7 @@ export class UserService {
 
   async getUser(id: string) {
     const user = await this.database.user.findUnique({ where: { id: id } });
-
     if (!user) throw new NotFoundException(`User with id: ${id} not found.`);
-
     return user;
   }
 

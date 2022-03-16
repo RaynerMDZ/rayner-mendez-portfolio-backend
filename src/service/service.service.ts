@@ -13,7 +13,7 @@ export class ServiceService {
     this.logger = new Logger('Services Service');
   }
 
-  async createOrUpdateUserServices(userId: string, serviceDto: ServiceDto) {
+  async createOrUpdateUserService(userId: string, serviceDto: ServiceDto) {
     const user = await this.userService.getUser(userId);
     if (!user)
       throw new ConflictException(`User with id: ${userId} Does not exists.`);
@@ -62,7 +62,7 @@ export class ServiceService {
     });
   }
 
-  async removeService(userId: string, serviceId: string) {
+  async removeUserService(userId: string, serviceId: string) {
     const user = this.userService.getUser(userId);
     if (!user)
       throw new ConflictException(

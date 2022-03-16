@@ -1,7 +1,7 @@
 import { UserService } from '../user/user.service';
 import { EducationService } from '../education/education.service';
 import { EmploymentService } from '../employment/employment.service';
-import { PictureService } from '../picture/picture.service';
+import { ImageService } from '../image/image.service';
 import { PostService } from '../post/post.service';
 import { ServiceService } from '../service/service.service';
 import { SkillService } from '../skill/skill.service';
@@ -10,7 +10,7 @@ import { PasswordDto } from '../user/dto/password.dto';
 import { UserDto } from '../user/dto/user.dto';
 import { PostDto } from '../post/dto/post.dto';
 import { Injectable } from '@nestjs/common';
-import { PictureDto } from "../picture/dto/picture.dto";
+import { ImageDto } from '../image/dto/image.dto';
 
 @Injectable()
 export class AdminService {
@@ -18,7 +18,7 @@ export class AdminService {
     private readonly userService: UserService,
     private readonly educationService: EducationService,
     private readonly employmentService: EmploymentService,
-    private readonly pictureService: PictureService,
+    private readonly pictureService: ImageService,
     private readonly postService: PostService,
     private readonly serviceService: ServiceService,
     private readonly skillService: SkillService,
@@ -38,10 +38,10 @@ export class AdminService {
 
   async createOrUpdateUserPicture(
     userId: string,
-    pictureDto: PictureDto,
+    pictureDto: ImageDto,
     image: Express.Multer.File,
   ) {
-    return await this.pictureService.createOrUpdateUserPicture(
+    return await this.pictureService.createOrUpdateUserImage(
       userId,
       pictureDto,
       image,
@@ -80,8 +80,8 @@ export class AdminService {
     // const post = await this.postService.getPost(user.id, postId);
     // if (!post) throw new NotFoundException('Post not found!');
 
-    // const picture = await this.pictureService.update(pictureId);
-    // if (!picture) throw new NotFoundException('Picture not found!');
+    // const image = await this.pictureService.update(pictureId);
+    // if (!image) throw new NotFoundException('Picture not found!');
 
     return Promise.resolve(undefined);
   }
